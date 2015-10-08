@@ -1,0 +1,7 @@
+Nette klasse structuur: goed gebruik OO concepten (interface, overerving, delegates)
+Gebruik van socket communicatie
+Gebruik van file IO
+Gebruik van threads of TPL
+Moet een forms applicatie zijn
+Maak gebruik van specifieke C# constructies
+Je kan gebruik maken van 2D graphics
