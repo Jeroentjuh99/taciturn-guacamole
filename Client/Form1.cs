@@ -16,5 +16,15 @@ namespace Client
         {
             InitializeComponent();
         }
+
+        private void LaunchButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
