@@ -39,7 +39,7 @@
             // 
             // LaunchButton
             // 
-            this.LaunchButton.Location = new System.Drawing.Point(344, 250);
+            this.LaunchButton.Location = new System.Drawing.Point(344, 246);
             this.LaunchButton.Name = "LaunchButton";
             this.LaunchButton.Size = new System.Drawing.Size(131, 53);
             this.LaunchButton.TabIndex = 0;
@@ -54,6 +54,7 @@
             this.AdressBox.Size = new System.Drawing.Size(276, 20);
             this.AdressBox.TabIndex = 1;
             this.AdressBox.Text = "IP or DNS";
+            this.AdressBox.TextChanged += new System.EventHandler(this.AdressBox_TextChanged);
             // 
             // progressBar1
             // 
