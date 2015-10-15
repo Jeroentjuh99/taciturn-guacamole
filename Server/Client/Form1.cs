@@ -24,10 +24,25 @@ namespace Client
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-
+            ProgramName.Enabled = ProgramLaunchCheckBox.Checked;
         }
 
         private void AdressBox_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void Selector1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ProgramName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void progressBar1_Click(object sender, EventArgs e)
         {
 
         }

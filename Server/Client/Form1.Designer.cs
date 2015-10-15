@@ -62,6 +62,7 @@
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(794, 23);
             this.progressBar1.TabIndex = 2;
+            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
             // 
             // Selector1
             // 
@@ -70,6 +71,7 @@
             this.Selector1.Name = "Selector1";
             this.Selector1.Size = new System.Drawing.Size(276, 21);
             this.Selector1.TabIndex = 3;
+            this.Selector1.SelectedIndexChanged += new System.EventHandler(this.Selector1_SelectedIndexChanged);
             // 
             // VersionLabel
             // 
@@ -83,6 +85,8 @@
             // ProgramLaunchCheckBox
             // 
             this.ProgramLaunchCheckBox.AutoSize = true;
+            this.ProgramLaunchCheckBox.Checked = true;
+            this.ProgramLaunchCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ProgramLaunchCheckBox.Location = new System.Drawing.Point(267, 148);
             this.ProgramLaunchCheckBox.Name = "ProgramLaunchCheckBox";
             this.ProgramLaunchCheckBox.Size = new System.Drawing.Size(109, 17);
@@ -98,6 +102,7 @@
             this.ProgramName.Size = new System.Drawing.Size(161, 20);
             this.ProgramName.TabIndex = 6;
             this.ProgramName.Text = "Program name to launch";
+            this.ProgramName.TextChanged += new System.EventHandler(this.ProgramName_TextChanged);
             // 
             // Client
             // 
