@@ -8,16 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SharedCode;
 
 
 namespace Server
 {
     public partial class Server : Form
     {
-        public IPManagement management = new IPManagement();
-        public ClientHandler handler;
-
         public Server()
         {
             InitializeComponent();
@@ -25,7 +21,7 @@ namespace Server
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.handler = new ClientHandler(management.ReturnIpAndPort());
+
         }
 
         private void FolderButton_Click(object sender, EventArgs e)
