@@ -35,11 +35,12 @@
             this.VersionLabel = new System.Windows.Forms.Label();
             this.ProgramLaunchCheckBox = new System.Windows.Forms.CheckBox();
             this.ProgramName = new System.Windows.Forms.TextBox();
+            this.OpenFolder = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // LaunchButton
             // 
-            this.LaunchButton.Location = new System.Drawing.Point(344, 246);
+            this.LaunchButton.Location = new System.Drawing.Point(269, 246);
             this.LaunchButton.Name = "LaunchButton";
             this.LaunchButton.Size = new System.Drawing.Size(131, 53);
             this.LaunchButton.TabIndex = 0;
@@ -104,11 +105,22 @@
             this.ProgramName.Text = "Program name to launch";
             this.ProgramName.TextChanged += new System.EventHandler(this.ProgramName_TextChanged);
             // 
+            // OpenFolder
+            // 
+            this.OpenFolder.Location = new System.Drawing.Point(426, 246);
+            this.OpenFolder.Name = "OpenFolder";
+            this.OpenFolder.Size = new System.Drawing.Size(117, 53);
+            this.OpenFolder.TabIndex = 7;
+            this.OpenFolder.Text = "Open Folder";
+            this.OpenFolder.UseVisualStyleBackColor = true;
+            this.OpenFolder.Click += new System.EventHandler(this.OpenFolder_Click);
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 346);
+            this.Controls.Add(this.OpenFolder);
             this.Controls.Add(this.ProgramName);
             this.Controls.Add(this.ProgramLaunchCheckBox);
             this.Controls.Add(this.VersionLabel);
@@ -132,6 +144,7 @@
         private System.Windows.Forms.Label VersionLabel;
         private System.Windows.Forms.CheckBox ProgramLaunchCheckBox;
         private System.Windows.Forms.TextBox ProgramName;
+        private System.Windows.Forms.Button OpenFolder;
     }
 }
 

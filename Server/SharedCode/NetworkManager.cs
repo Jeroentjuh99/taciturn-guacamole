@@ -12,6 +12,11 @@ namespace SharedCode
     {
         private readonly NetworkStream stream;
 
+        public NetworkManager()
+        {
+            
+        }
+
         public NetworkManager(NetworkStream stream)
         {
             this.stream = stream;

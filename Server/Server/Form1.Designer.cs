@@ -58,11 +58,12 @@
             // IpLabel
             // 
             this.IpLabel.AutoSize = true;
-            this.IpLabel.Location = new System.Drawing.Point(87, 48);
+            this.IpLabel.Location = new System.Drawing.Point(63, 47);
             this.IpLabel.Name = "IpLabel";
             this.IpLabel.Size = new System.Drawing.Size(21, 13);
             this.IpLabel.TabIndex = 2;
             this.IpLabel.Text = "ip: ";
+            this.IpLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.IpLabel.Click += new System.EventHandler(this.label2_Click);
             // 
             // Server
