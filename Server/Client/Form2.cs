@@ -1,48 +1,53 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Client
 {
     public partial class Form2 : Form
     {
-        private Client form;
+        private readonly Client _form;
 
-        public string Foldername
-        {
-            get { return FolderInput.Text; }
-            set { FolderInput.Text = value; }
-        }
-
-        public string Selected
-        {
-            get { return checkedListBox1.SelectedItem.ToString(); }
-        }
-
-        public string SelectedItem
-        {
-            get { return null; }
-        }
-
-        public Form2(Client form)
+        public Form2(Client form, string[] items)
         {
             InitializeComponent();
-            this.form = form;
+            this._form = form;
+            FillBox(items);
+            checkedListBox1.SelectionMode = SelectionMode.One;
+            checkedListBox1.MultiColumn = false;
         }
 
-        public string[] show(string[] items)
+        private void FillBox(string[] items)
         {
-            checkedListBox1.SelectionMode = SelectionMode.One;
             foreach (var v in items)
             {
                 checkedListBox1.Items.Add(v);
             }
-            string[] answer = new string[2];
-            return answer;
         }
 
         private void OkButton_Click(object sender, EventArgs e)
         {
+            if (!(FolderInput.Text.Trim().Equals("")))
+            {
+                if (checkedListBox1.CheckedItems.Count == 1)
+                {
+                    _form.HandleNew(this, new[] { FolderInput.Text.Trim(), checkedListBox1.SelectedItem.ToString()});
+                }
+            }
+        }
 
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            CheckedListBox items = (CheckedListBox)sender;
+            if (items.CheckedItems.Count > (1))
+            {
+                e.NewValue = CheckState.Unchecked;
+            }
         }
     }
 }

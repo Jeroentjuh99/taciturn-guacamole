@@ -36,8 +36,6 @@ namespace Server
             return ip;
         }
 
-        
-
         public void StartThread()
         {
             IPAddress address = IPAddress.Parse(GetPublicIp());

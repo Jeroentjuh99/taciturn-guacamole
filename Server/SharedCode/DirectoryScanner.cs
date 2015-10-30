@@ -5,7 +5,7 @@ namespace SharedCode
 {
     public class DirectoryScanner
     {
-        public DirectoryInfo[] scan(string path)
+        public DirectoryInfo[] Scan(string path)
         {
             DirectoryInfo directory = new DirectoryInfo(path);
             return directory.GetDirectories();

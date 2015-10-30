@@ -65,7 +65,7 @@ namespace Server
 
         public DirectoryInfo[] ScanFolders()
         {
-            return _scanner.scan(Path.GetDirectoryName(Application.ExecutablePath));
+            return _scanner.Scan(Path.GetDirectoryName(Application.ExecutablePath));
         }
     }
 }

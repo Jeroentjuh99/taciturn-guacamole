@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Windows.Forms;
 using SharedCode;
 
@@ -20,6 +21,45 @@ namespace Client
         private void LaunchButton_Click(object sender, EventArgs e)
         {
             NetworkManager manager = GetManager();
+            string selected = Selector1.SelectedItem.ToString();
+            string[] data = ReadConfig(selected);
+            manager.SendMessage(data[1] + '/' + data[2]);
+            string[] reply = manager.ReceiveMessage().Split('/');
+            if (reply.GetLength(0) == 2)
+            {
+                SetProgressMax(Convert.ToInt32(reply[0]));
+                ReceiveFile(manager, Path.Combine(Application.StartupPath, selected), reply);
+
+            }
+        }
+
+        private void ReceiveFile(NetworkManager manager, string path, string[] fileData)
+        {
+            NetworkStream stream = manager.GetStream();
+            int length = Convert.ToInt32(fileData[0]);
+            byte[] buffer = new byte[length];
+            int received = 0;
+            int read = 0;
+            int size = 1024;
+            int remaining = 0;
+
+            while (received < length)
+            {
+                remaining = length - received;
+                if (remaining < size)
+                {
+                    size = remaining;
+                }
+                read = stream.Read(buffer, received, size);
+                received += read;
+                SetProgress(received);
+            }
+            using (FileStream fStream = new FileStream(Path.Combine(path, fileData[1]), FileMode.Create))
+            {
+                fStream.Write(buffer, 0, buffer.Length);
+                fStream.Flush();
+                fStream.Close();
+            }
         }
 
         private NetworkManager GetManager()
@@ -36,7 +76,7 @@ namespace Client
                 {
                     address = IPAddress.Parse(AdressBox.Text);
                 }
-                catch (Exception pp)
+                catch (Exception)
                 {
                     address = IPAddress.Parse("127.0.0.1");
                 }
@@ -63,6 +103,36 @@ namespace Client
             ProgramName.Enabled = ProgramLaunchCheckBox.Checked;
         }
 
+        public void SetProgressMax(Int32 lenght)
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new MethodInvoker(delegate ()
+                {
+                    SetProgressMax(lenght);
+                }));
+            }
+            else
+            {
+                progressBar1.Maximum = lenght;
+            }
+        }
+
+        public void SetProgress(Int32 lenght)
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new MethodInvoker(delegate ()
+                {
+                    SetProgress(lenght);
+                }));
+            }
+            else
+            {
+                progressBar1.Value = lenght;
+            }
+        }
+
         private void AdressBox_TextChanged(object sender, EventArgs e)
         {
 
@@ -87,8 +157,8 @@ namespace Client
                 {
                     AdressBox.Text = strings[0];
                     VersionLabel.Text = strings[2];
-                    ProgramName.Text = strings[4];
-                    if ((strings[4].Trim() != "") || (strings[4].Trim() != "Program name to launch"))
+                    ProgramName.Text = strings[3];
+                    if ((strings[3].Trim() != "") || !(strings[3].Trim().Equals("Program name to launch")) || !(strings[3].Equals("null")))
                     {
                         ProgramName.Enabled = true;
                     }
@@ -103,20 +173,29 @@ namespace Client
                 NetworkManager manager = GetManager();
                 manager.SendMessage("files");
                 string[] array = manager.ReceiveMessage().Split('/');
-                Form2 input = new Form2(this);
-                string[] answer = input.show(array);
-                CreateOrChangeConfig(answer[0], AdressBox.Text, answer[1], "0.0", "null");
-                ReloadSelector(answer[0]);
+
+                Form2 input = new Form2(this, array);
+                input.Show();
             }
+
+        }
+
+        public void HandleNew(Form2 input, string[] answer)
+        {
+            MessageBox.Show(answer[0]);
+            CreateOrChangeConfig(answer[0], AdressBox.Text, answer[1], "0.0", "null");
+            ReloadSelector(answer[0]);
+            input.Dispose();
         }
 
         private void ReloadSelector(string selectedName)
         {
-            DirectoryInfo[] folders = _dScanner.scan(Path.GetDirectoryName(Application.ExecutablePath));
+            Selector1.Items.Clear();
+            DirectoryInfo[] folders = _dScanner.Scan(Path.GetDirectoryName(Application.ExecutablePath));
             Selector1.Items.Add("New...");
-            foreach (var V in folders)
+            foreach (var v in folders)
             {
-                Selector1.Items.Add(V.Name);
+                Selector1.Items.Add(v.Name);
             }
             Selector1.SelectedItem = selectedName;
         }
@@ -134,32 +213,31 @@ namespace Client
         private void CreateOrChangeConfig(string mapName, string address, string mapOnServer, string version,
             string executable)
         {
-            MessageBox.Show(mapName);
-            try
+            if (address.Equals("IP or DNS"))
             {
-                File.Delete("/" + mapName + "/CONFIG");
+                address = "127.0.0.1";
             }
-            catch (Exception p)
+            var tempPath = Path.Combine(Application.StartupPath, mapName);
+            if (!Directory.Exists(tempPath))
             {
+                Directory.CreateDirectory(mapName);
             }
-            finally
+            string path = Path.Combine(tempPath, "config.dat");
+            FileStream file = File.Open(path, FileMode.Create, FileAccess.Write);
+           
+            using (StreamWriter sw = new StreamWriter(file))
             {
-                using (StreamWriter sw = File.AppendText("/" + mapName + "/CONFIG"))
-                {
-                    sw.WriteLine(address);
-                    sw.WriteLine(mapOnServer);
-                    sw.WriteLine(version);
-                    sw.WriteLine(executable);
-                }
+                sw.WriteLine(address);
+                sw.WriteLine(mapOnServer);
+                sw.WriteLine(version);
+                sw.WriteLine(executable);
             }
-
-            MessageBox.Show(mapName);
-
         }
 
         private string[] ReadConfig(string mapName)
         {
-            string[] returnedValues = System.IO.File.ReadAllLines("/" + mapName + "/CONFIG");
+            string path = Path.Combine(Application.StartupPath, mapName, "config.dat");
+            string[] returnedValues = File.ReadAllLines(path);
             return returnedValues;
         }
 
@@ -169,7 +247,7 @@ namespace Client
             _dScanner.OpenFolder(Path.GetDirectoryName(Application.ExecutablePath));
             else
             {
-                _dScanner.OpenFolder("/" + Selector1.SelectedItem.ToString());
+                _dScanner.OpenFolder(Path.Combine(Application.StartupPath, Selector1.SelectedItem.ToString()));
             }
         }
     }
