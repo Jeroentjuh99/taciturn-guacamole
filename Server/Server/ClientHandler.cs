@@ -65,7 +65,7 @@ namespace Server
                 else
                 {
                     string b = new FileInfo(Path.Combine(Application.StartupPath, message[0], files[0])).Length.ToString();
-                    _manager.SendMessage(b + '/' + files[0]);
+                    _manager.SendMessage(b + '/' + Path.GetFileName(files[0]));
                     _client.Client.SendFile(Path.Combine(Application.StartupPath, message[0], files[0]));
                 }
             }

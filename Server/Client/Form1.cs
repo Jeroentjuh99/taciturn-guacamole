@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
@@ -27,6 +28,7 @@ namespace Client
             string[] reply = manager.ReceiveMessage().Split('/');
             if (reply.GetLength(0) == 2)
             {
+               // reply[1] = reply[1].Substring(reply[1].LastIndexOf());
                 SetProgressMax(Convert.ToInt32(reply[0]));
                 ReceiveFile(manager, Path.Combine(Application.StartupPath, selected), reply);
 
@@ -35,6 +37,7 @@ namespace Client
 
         private void ReceiveFile(NetworkManager manager, string path, string[] fileData)
         {
+            MessageBox.Show(fileData[1]);
             NetworkStream stream = manager.GetStream();
             int length = Convert.ToInt32(fileData[0]);
             byte[] buffer = new byte[length];
@@ -54,11 +57,11 @@ namespace Client
                 received += read;
                 SetProgress(received);
             }
-            using (FileStream fStream = new FileStream(Path.Combine(path, fileData[1]), FileMode.Create))
+            using (FileStream fStream = new FileStream(Path.Combine(path, fileData[1]), FileMode.Create, FileAccess.ReadWrite, FileShare.None, buffer.Length))
             {
                 fStream.Write(buffer, 0, buffer.Length);
-                fStream.Flush();
-                fStream.Close();
+                //fStream.Flush();
+                //fStream.Close();
             }
         }
 
