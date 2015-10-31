@@ -82,7 +82,15 @@ namespace Server
             {
                 a += variable.Name + '/';
             }
-            return a.Substring(0, a.LastIndexOf('/'));
+            try
+            {
+                a = a.Substring(0, a.LastIndexOf('/'));
+            }
+            catch (Exception)
+            {
+                a = "null";
+            }
+            return a;
         }
 
         private void HandleFiles()

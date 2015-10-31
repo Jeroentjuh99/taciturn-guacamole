@@ -5,6 +5,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
+using System.IO.Compression;
 using SharedCode;
 
 namespace Client
@@ -28,11 +29,11 @@ namespace Client
             string[] reply = manager.ReceiveMessage().Split('/');
             if (reply.GetLength(0) == 2)
             {
-               // reply[1] = reply[1].Substring(reply[1].LastIndexOf());
                 SetProgressMax(Convert.ToInt32(reply[0]));
                 ReceiveFile(manager, Path.Combine(Application.StartupPath, selected), reply);
-
             }
+
+
         }
 
         private void ReceiveFile(NetworkManager manager, string path, string[] fileData)
@@ -57,12 +58,20 @@ namespace Client
                 received += read;
                 SetProgress(received);
             }
-            using (FileStream fStream = new FileStream(Path.Combine(path, fileData[1]), FileMode.Create, FileAccess.ReadWrite, FileShare.None, buffer.Length))
+            string writepath = Path.Combine(path, fileData[1]);
+            using (FileStream fStream = new FileStream(writepath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, buffer.Length))
             {
                 fStream.Write(buffer, 0, buffer.Length);
-                //fStream.Flush();
-                //fStream.Close();
             }
+            string[] temp = ReadConfig(Selector1.SelectedItem.ToString());
+            var a = ProgramLaunchCheckBox.Checked ? ProgramName.Text : "null";
+            CreateOrChangeConfig(temp[0], AdressBox.Text, temp[2], fileData[1], a);
+            if (fileData[1].EndsWith(".zip"))
+            {
+                ZipFile.ExtractToDirectory(writepath, path);
+                File.Delete(writepath);
+            }
+            VersionLabel.Text = fileData[1];
         }
 
         private NetworkManager GetManager()
@@ -175,7 +184,13 @@ namespace Client
             {
                 NetworkManager manager = GetManager();
                 manager.SendMessage("files");
-                string[] array = manager.ReceiveMessage().Split('/');
+                string b = manager.ReceiveMessage();
+                if (b.Equals("null"))
+                {
+                    MessageBox.Show("There are no files to download on this server");
+                    Environment.Exit(0);
+                }
+                string[] array = b.Split('/');
 
                 Form2 input = new Form2(this, array);
                 input.Show();
