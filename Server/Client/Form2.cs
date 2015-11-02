@@ -40,14 +40,5 @@ namespace Client
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
-
-        private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            CheckedListBox items = (CheckedListBox)sender;
-            if (items.CheckedItems.Count > (1))
-            {
-                e.NewValue = CheckState.Unchecked;
-            }
-        }
     }
 }

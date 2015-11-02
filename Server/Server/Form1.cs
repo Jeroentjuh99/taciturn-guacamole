@@ -15,8 +15,6 @@ namespace Server
     public partial class Server : Form
     {
         private readonly DirectoryScanner _scanner = new DirectoryScanner();
-        private TcpListener _listener;
-        private ListenerClass _listenerClass;
 
         public Server()
         {
@@ -25,10 +23,9 @@ namespace Server
 
         private void Form1_Load(object sender, EventArgs e)
         {
-                _listenerClass = new ListenerClass(this);
-                Thread t = new Thread(_listenerClass.StartThread);
-                t.IsBackground = true;
-                t.Start();
+            ListenerClass _listenerClass = new ListenerClass(this);
+            Thread t = new Thread(_listenerClass.StartThread) {IsBackground = true};
+            t.Start();
         }
 
         public void SetLabelText(string ip, string state, Color color)

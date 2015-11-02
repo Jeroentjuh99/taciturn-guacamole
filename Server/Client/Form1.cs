@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -22,6 +23,7 @@ namespace Client
 
         private void LaunchButton_Click(object sender, EventArgs e)
         {
+            ToggleGui(false);
             NetworkManager manager = GetManager();
             string selected = Selector1.SelectedItem.ToString();
             string[] data = ReadConfig(selected);
@@ -33,12 +35,16 @@ namespace Client
                 ReceiveFile(manager, Path.Combine(Application.StartupPath, selected), reply);
             }
 
-
+            if (ProgramLaunchCheckBox.Checked)
+            {
+                Process.Start(Path.Combine(Application.StartupPath, selected, ProgramName.Text));
+            }
+            CreateOrChangeConfig(selected, AdressBox.Text, data[1], VersionLabel.Text, ProgramName.Text);
+            ToggleGui(true);
         }
 
         private void ReceiveFile(NetworkManager manager, string path, string[] fileData)
         {
-            MessageBox.Show(fileData[1]);
             NetworkStream stream = manager.GetStream();
             int length = Convert.ToInt32(fileData[0]);
             byte[] buffer = new byte[length];
@@ -82,7 +88,7 @@ namespace Client
             {
                 address = Dns.GetHostAddresses(AdressBox.Text)[0];
             }
-            catch (Exception p)
+            catch (Exception)
             {
                 try
                 {
@@ -175,7 +181,7 @@ namespace Client
                     AdressBox.Text = strings[0];
                     VersionLabel.Text = strings[2];
                     ProgramName.Text = strings[3];
-                    if ((strings[3].Trim() != "") || !(strings[3].Trim().Equals("Program name to launch")) || !(strings[3].Equals("null")))
+                    if (!(strings[3].Trim().Equals("")) && !(strings[3].Trim().Equals("Program name to launch")) && !(strings[3].Equals("null")))
                     {
                         ProgramName.Enabled = true;
                     }
@@ -203,9 +209,23 @@ namespace Client
 
         }
 
+        private void ToggleGui(bool b)
+        {
+            Selector1.Enabled = b;
+            AdressBox.Enabled = b;
+            ProgramLaunchCheckBox.Enabled = b;
+            if (b == true && ProgramLaunchCheckBox.Checked)
+            {
+                ProgramName.Enabled = true;
+            }
+            else
+            {
+                ProgramName.Enabled = false;
+            }
+        }
+
         public void HandleNew(Form2 input, string[] answer)
         {
-            MessageBox.Show(answer[0]);
             CreateOrChangeConfig(answer[0], AdressBox.Text, answer[1], "0.0", "null");
             ReloadSelector(answer[0]);
             input.Dispose();
@@ -245,7 +265,7 @@ namespace Client
             {
                 Directory.CreateDirectory(mapName);
             }
-            string path = Path.Combine(tempPath, "config.dat");
+            string path = Path.Combine(tempPath, "updater.config");
             FileStream file = File.Open(path, FileMode.Create, FileAccess.Write);
            
             using (StreamWriter sw = new StreamWriter(file))
@@ -259,7 +279,7 @@ namespace Client
 
         private string[] ReadConfig(string mapName)
         {
-            string path = Path.Combine(Application.StartupPath, mapName, "config.dat");
+            string path = Path.Combine(Application.StartupPath, mapName, "updater.config");
             string[] returnedValues = File.ReadAllLines(path);
             return returnedValues;
         }
