@@ -112,7 +112,12 @@ namespace Client
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            ProgramName.Enabled = ProgramLaunchCheckBox.Checked;
+            ToggleTextbox(ProgramLaunchCheckBox.Checked);
+        }
+
+        private void ToggleTextbox(bool b)
+        {
+            ProgramName.Enabled = b;
         }
 
         public void SetProgressMax(Int32 lenght)
