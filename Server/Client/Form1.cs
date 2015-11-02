@@ -76,7 +76,7 @@ namespace Client
             }
             string[] temp = ReadConfig(Selector1.SelectedItem.ToString());
             var a = ProgramLaunchCheckBox.Checked ? ProgramName.Text : "null";
-            CreateOrChangeConfig(temp[0], AdressBox.Text, temp[2], fileData[1], a);
+            CreateOrChangeConfig(Selector1.SelectedItem.ToString(), AdressBox.Text, temp[2], fileData[1], a);
             if (fileData[1].EndsWith(".zip"))
             {
                 ZipFile.ExtractToDirectory(writepath, path);
@@ -245,7 +245,6 @@ namespace Client
             Selector1.Items.Add("New...");
             foreach (var v in folders)
             {
-                if(!(v.Name.Equals("127.0.0.1")))
                     Selector1.Items.Add(v.Name);
             }
             Selector1.SelectedItem = selectedName;
