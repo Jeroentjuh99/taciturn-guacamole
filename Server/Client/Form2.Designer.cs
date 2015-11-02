@@ -70,7 +70,7 @@
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.FolderInput);
             this.Name = "Form2";
-            this.Text = "Form2";
+            this.Text = "Please fill in these fields";
             this.ResumeLayout(false);
             this.PerformLayout();
 

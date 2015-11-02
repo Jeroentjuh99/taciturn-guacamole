@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Threading;
 
 namespace Client
 {
@@ -31,14 +30,26 @@ namespace Client
             {
                 if (checkedListBox1.CheckedItems.Count == 1)
                 {
-                    _form.HandleNew(this, new[] { FolderInput.Text.Trim(), checkedListBox1.SelectedItem.ToString()});
+                    _form.HandleNew(this, new[] {FolderInput.Text.Trim(), checkedListBox1.SelectedItem.ToString()});
                 }
+                else
+                {
+                    MessageBox.Show(text: string.Format("You did select {0} items, but only 1 can be selected", checkedListBox1.SelectedItems.Count));
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please fill in a new folder name");
             }
         }
 
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (checkedListBox1.SelectedItems.Count > 1)
+            {
+                checkedListBox1.ClearSelected();
+            }
         }
     }
 }

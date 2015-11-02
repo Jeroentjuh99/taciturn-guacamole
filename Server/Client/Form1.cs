@@ -2,9 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Threading;
 using System.Windows.Forms;
 using System.IO.Compression;
 using SharedCode;
@@ -37,7 +35,14 @@ namespace Client
 
             if (ProgramLaunchCheckBox.Checked)
             {
-                Process.Start(Path.Combine(Application.StartupPath, selected, ProgramName.Text));
+                try
+                {
+                    Process.Start(Path.Combine(Application.StartupPath, selected, ProgramName.Text));
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(text: string.Format("{0} could not be opened", ProgramName.Text));
+                }
             }
             CreateOrChangeConfig(selected, AdressBox.Text, data[1], VersionLabel.Text, ProgramName.Text);
             ToggleGui(true);
@@ -184,10 +189,12 @@ namespace Client
                     if (!(strings[3].Trim().Equals("")) && !(strings[3].Trim().Equals("Program name to launch")) && !(strings[3].Equals("null")))
                     {
                         ProgramName.Enabled = true;
+                        ProgramLaunchCheckBox.Checked = true;
                     }
                     else
                     {
                         ProgramName.Enabled = false;
+                        ProgramLaunchCheckBox.Checked = false;
                     }
                 }
             }
@@ -238,7 +245,8 @@ namespace Client
             Selector1.Items.Add("New...");
             foreach (var v in folders)
             {
-                Selector1.Items.Add(v.Name);
+                if(!(v.Name.Equals("127.0.0.1")))
+                    Selector1.Items.Add(v.Name);
             }
             Selector1.SelectedItem = selectedName;
         }
@@ -293,5 +301,6 @@ namespace Client
                 _dScanner.OpenFolder(Path.Combine(Application.StartupPath, Selector1.SelectedItem.ToString()));
             }
         }
+
     }
 }
