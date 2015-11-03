@@ -79,7 +79,13 @@ namespace Client
             CreateOrChangeConfig(Selector1.SelectedItem.ToString(), AdressBox.Text, temp[2], fileData[1], a);
             if (fileData[1].EndsWith(".zip"))
             {
-                ZipFile.ExtractToDirectory(writepath, path);
+                try
+                {
+                    ZipFile.ExtractToDirectory(writepath, path);
+                }
+                catch (Exception)
+                {
+                }
                 File.Delete(writepath);
             }
             VersionLabel.Text = fileData[1];
